@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SaasKit
 {
@@ -44,18 +45,19 @@ namespace SaasKit
             {
                 if (disposing)
                 {
-                    try
+                    Console.WriteLine("{0} Disposing.", this.ToString());
+                    
+                    foreach (var disposable in Properties.Values.OfType<IDisposable>())
                     {
-                        // dispose container here
-                    }
-                    catch (ObjectDisposedException)
-                    {
-
+                        try
+                        {
+                            disposable.Dispose();
+                        }
+                        catch (ObjectDisposedException) { }
                     }
                 }
 
-                Console.WriteLine("Instance disposed");
-                // set container to null 
+                Properties = null;
                 isDisposed = true;
             }
         }

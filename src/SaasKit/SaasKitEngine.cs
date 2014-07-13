@@ -4,18 +4,20 @@ using System.Threading.Tasks;
 
 namespace SaasKit
 {
-    public class SaasKitEngine : ISaasKitEngine
+    public class SaasKitEngine
     {
         private readonly SaasKitConfiguration configuration;
-        private readonly IInstanceStore runningInstances;
+        private readonly IInstanceCache runningInstances;
+
+        public event EventHandler<TenantInstanceStartingEventArgs> TenantInstanceStarting;
+        public event EventHandler<TenantInstanceShutdownEventArgs> TenantInstanceShutdown;
 
         public SaasKitEngine(SaasKitConfiguration configuration)
-            : this(configuration, new MemoryCacheInstanceStore(InstanceLifetimeOptions.Default))
+            : this(configuration, new DefaultInstanceStore(InstanceLifetimeOptions.Default))
         {
-
         }
 
-        public SaasKitEngine(SaasKitConfiguration configuration, IInstanceStore instanceStore)
+        public SaasKitEngine(SaasKitConfiguration configuration, IInstanceCache instanceStore)
         {
             if (configuration == null)
             {
@@ -36,7 +38,7 @@ namespace SaasKit
             this.runningInstances = instanceStore;
         }
 
-        public async Task BeginRequest(IOwinContext context)
+        public async Task<TenantInstance> BeginRequest(IOwinContext context)
         {
             if (context == null)
             {
@@ -46,15 +48,7 @@ namespace SaasKit
             Log("Begin request.");
 
             var instance = await GetTenantInstance(context.Request);
-
-            if (instance != null)
-            {
-                context.Set(Constants.OwinCurrentTenant, instance);
-            }
-            else
-            {
-                // TODO - support default instances (for single tenant / fallback scenarios)
-            }
+            return instance;
         }
 
         public Task EndRequest(IOwinContext context)
@@ -104,7 +98,9 @@ namespace SaasKit
             var instance = new TenantInstance(tenant);
             runningInstances.Add(instance, ShutdownInstance);
 
-            Log("Started instance '{0}'", instance.Id);
+            TenantInstanceStarting.SafeInvoke(this, new TenantInstanceStartingEventArgs(instance));
+            Log("Started instance '{0}'", instance.Id);         
+
             return instance;
         }
 
@@ -121,6 +117,7 @@ namespace SaasKit
 
             lock (instance)
             {
+                TenantInstanceShutdown.SafeInvoke(this, new TenantInstanceShutdownEventArgs(instance));
                 instance.Dispose();
             }
         }

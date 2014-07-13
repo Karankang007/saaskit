@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaasKit", "SaasKit\SaasKit.csproj", "{C1C0A207-E53C-4FB4-A410-6254CFEE30A6}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaasKit.Demos.AspNet", "Demos\SaasKit.Demos.AspNet\SaasKit.Demos.AspNet.csproj", "{2502D64D-EBB0-4DD4-8D69-FD2228CE87A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaasKit.Integration.Nancy", "SaasKit.Integration.Nancy\SaasKit.Integration.Nancy.csproj", "{3994DCC4-CF23-448F-A61B-4EB2334EDAA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaasKit.StructureMap", "SaasKit.StructureMap\SaasKit.StructureMap.csproj", "{1BAD8462-3AC2-49C6-A0EF-2C48CF08F3E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{3994DCC4-CF23-448F-A61B-4EB2334EDAA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3994DCC4-CF23-448F-A61B-4EB2334EDAA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3994DCC4-CF23-448F-A61B-4EB2334EDAA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BAD8462-3AC2-49C6-A0EF-2C48CF08F3E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BAD8462-3AC2-49C6-A0EF-2C48CF08F3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BAD8462-3AC2-49C6-A0EF-2C48CF08F3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BAD8462-3AC2-49C6-A0EF-2C48CF08F3E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

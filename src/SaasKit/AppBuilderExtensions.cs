@@ -1,23 +1,24 @@
-using SaasKit;
+using SaasKit.Bootstrapper;
 using System;
 
 namespace Owin
 {
     public static class AppBuilderExtensions
     {
-        public static IAppBuilder UseSaasKit(this IAppBuilder app, ISaasKitEngine engine)
+        public static IAppBuilder UseSaasKit(this IAppBuilder appBuilder, ISaasKitBootstrapper bootstrapper)
         {
-            if (app == null)
+            if (appBuilder == null)
             {
-                throw new ArgumentNullException("app");
+                throw new ArgumentNullException("appBuilder");
             }
 
-            if (engine == null)
+            if (bootstrapper == null)
             {
-                throw new ArgumentNullException("engine");
+                throw new ArgumentNullException("bootstrapper");
             }
 
-            return app.Use(typeof(SaasKitOwinAdapter), engine);
+            bootstrapper.Initialize(appBuilder);
+            return appBuilder;
         }
     }
 }

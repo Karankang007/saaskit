@@ -1,5 +1,9 @@
 using Owin;
+using SaasKit.Bootstrapper;
+using SaasKit.StructureMap;
+using StructureMap;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -9,12 +13,14 @@ namespace SaasKit.Demos.Nancy
     {
         public void Configuration(IAppBuilder app)
         {
-            app.UseSaasKit(ConfigureSaasKit())
-               .UseWebApi(ConfigureWebApi())
-               .UseNancy();
+            var container = new Container();
+
+            app.UseSaasKit(BootSaasKit(container))
+               //.UseWebApi(ConfigureWebApi())
+               .UseNancy(cfg => cfg.Bootstrapper = new MyNancyBootstrapper(container));
         }
 
-        private ISaasKitEngine ConfigureSaasKit()
+        private ISaasKitBootstrapper BootSaasKit(IContainer container)
         {
             var config = new SaasKitConfiguration
             {
@@ -22,14 +28,14 @@ namespace SaasKit.Demos.Nancy
                 Logger = msg => Console.WriteLine(msg)
             };
 
-            var instanceStore = new MemoryCacheInstanceStore(
+            var instanceStore = new DefaultInstanceStore(
                 new InstanceLifetimeOptions { 
                     Lifetime =  TimeSpan.FromSeconds(30),
                     UseSlidingExpiration = true
                 }
             );
 
-            return new SaasKitEngine(config, instanceStore);
+            return new StructureMapSaasKitBootstrapper(config);
         }
 
         private HttpConfiguration ConfigureWebApi()
@@ -44,14 +50,15 @@ namespace SaasKit.Demos.Nancy
     public class MyResolver : ITenantResolver
     {
         public Task<ITenant> Resolve(string tenantIdentifier)
-        {           
-            var tenant = new Tenant
+        {
+            var tenants = new Dictionary<string, Tenant>
             {
-                Name = "Tenant1",
-                RequestIdentifiers = new[] { "localhost", "dev.local" }
-            };
+                { "localhost", new Tenant { Name = "Tenant1", RequestIdentifiers = new[] { "localhost" }}},
+                { "dev.local", new Tenant { Name = "Tenant2", RequestIdentifiers = new[] { "dev.local" }}},
 
-            return Task.FromResult<ITenant>(tenant);
+            };
+            
+            return Task.FromResult<ITenant>(tenants[tenantIdentifier]);
         }
     }
 }

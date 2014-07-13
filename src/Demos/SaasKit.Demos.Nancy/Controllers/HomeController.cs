@@ -7,7 +7,7 @@ namespace SaasKit.Demos.Nancy.Controllers
     {
         public string Get()
         {
-            var currentTenant = Request.GetOwinContext().GetTenantInstance();
+            var currentTenant = "foo";//Request.GetOwinContext().GetTenantInstance();
             return "Current Tenant: " + currentTenant;
         }
     }

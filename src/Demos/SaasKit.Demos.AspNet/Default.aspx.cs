@@ -7,7 +7,7 @@ namespace SaasKit.Demos.AspNet
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            var currentTenant = Request.GetOwinContext().GetTenantInstance();
+            var currentTenant = "foo";//Request.GetOwinContext().GetTenantInstance();
             lblTenant.Text = "Current Tenant: " + currentTenant;
         }
     }

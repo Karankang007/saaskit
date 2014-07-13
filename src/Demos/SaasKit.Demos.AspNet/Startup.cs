@@ -12,7 +12,7 @@ namespace SaasKit.Demos.AspNet
                 TenantResolver = new MyResolver()
             });
 
-            app.UseSaasKit(engine);
+            //app.UseSaasKit(engine);
         }
     }
 
